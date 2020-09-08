@@ -3,7 +3,6 @@ import {HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpClient} from '
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 
-import {SecurityService} from '../services/security.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -15,7 +14,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     allowedorganizations: ['SSOUniverse1']
   };
 
-  constructor(private securityService: SecurityService, private http: HttpClient) {
+  constructor(private http: HttpClient) {
   }
 
   $token(): Observable<any> {
@@ -27,7 +26,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((err) => {
         if (err.status === 401) {
           // auto logout if 401 response returned from api
-          this.securityService.RemoveToken();
+        //  this.securityService.RemoveToken();
           //retrieve the token
           this.$token()
             .pipe(map(data => {
