@@ -1,9 +1,9 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
-import {JwtInterceptor} from './helpers/jwt.interceptor';
+
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import { ErrorInterceptor} from './helpers/error.interceptor';
+
 import { AuthService} from './auth.service';
 import { RetryWhenInterceptor} from './http-interceptors/retry-when.interceptor';
 
