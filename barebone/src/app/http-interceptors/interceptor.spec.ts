@@ -6,12 +6,11 @@ import { BruteForceInterceptor } from './brute-force.interceptor';
 import { AuthService } from '../auth.service';
 import { of, throwError } from 'rxjs';
 import { catchError, delay } from 'rxjs/operators';
-import { CaughtInterceptor } from './caught.interceptor';
+
 import { RetryWhenInterceptor } from './retry-when.interceptor';
 
 [
   BruteForceInterceptor,
-  CaughtInterceptor,
   RetryWhenInterceptor
 ].forEach(interceptor => {
   describe(interceptor.name + ' testing', () => {
@@ -19,6 +18,7 @@ import { RetryWhenInterceptor } from './retry-when.interceptor';
     let httpClient: HttpClient;
     let httpTestingController: HttpTestingController;
     const testUrl = 'http://localhost:2637/api/Tenant';
+    const testAuthenticationUrl = 'http://localhost:2637/api/authentication';
     const testData = { name: 'Test Data' };
     const wait = ms => new Promise(res => setTimeout(res, ms));
 
@@ -65,7 +65,7 @@ import { RetryWhenInterceptor } from './retry-when.interceptor';
         }
       );
       await wait(0);
-      httpTestingController.expectOne(testUrl).flush(testData);
+      httpTestingController.expectOne(testAuthenticationUrl).flush(testData);
     });
 
     it('should refresh token only once for multiple requests', async (done) => {
@@ -154,7 +154,7 @@ import { RetryWhenInterceptor } from './retry-when.interceptor';
         )
       );
 
-      requests = httpTestingController.match(testUrl);
+      requests = httpTestingController.match(testAuthenticationUrl);
       expect(requests.length).toEqual(0);
 
       expect(logoutSpy).toHaveBeenCalled();
@@ -167,22 +167,11 @@ import { RetryWhenInterceptor } from './retry-when.interceptor';
         .pipe(catchError(() => of('error')))
         .subscribe((data) => expect(data).toEqual('error'));
       const logoutSpy = spyOn(authService, 'logout');
-      httpTestingController.expectOne(testUrl).flush(
-        { error: 'invalid_grant' },
-        {
-          status: 401,
-          statusText: 'Unauthorized',
-        }
-      );
+      httpTestingController.expectOne(testUrl);
 
       await wait(0);
-      httpTestingController.expectOne(testUrl).flush(
-        { error: 'invalid_grant' },
-        {
-          status: 401,
-          statusText: 'Unauthorized',
-        }
-      );
+      httpTestingController.expectOne(testAuthenticationUrl);
+
       expect(logoutSpy).toHaveBeenCalled();
     });
 

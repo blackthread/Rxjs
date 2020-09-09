@@ -8,7 +8,6 @@ import { concatMap, map, mergeMap, retryWhen, take } from 'rxjs/operators';
 export class RetryWhenInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {
   }
-
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.authService.token$.pipe(
       map(token => req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })),

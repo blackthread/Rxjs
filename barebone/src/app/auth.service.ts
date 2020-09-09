@@ -44,13 +44,14 @@ export class AuthService {
     return this.tokenSubject$.value;
   }
 
-  authenticate(): void {
-    this.tokenSubject$.next('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRJZCI6IjIiLCJ1bml2ZXJzZUlkIjoiMTAiLCJ1c2VySWQiOiI3IiwibmJmIjoxNTk5NjU0Nzg4LCJleHAiOjE1OTk2NTUwODgsImlhdCI6MTU5OTY1NDc4OH0.9Tn4gAMxUXV_kwe9syLOzoXzvpfBIJQ4Z8RYlCYzd-w');
+  authenticate(){
+    this.tokenSubject$.next('some_token');
   }
 
   refreshToken(): Observable<RefreshTokenResult> {
     const auth$ = this.http.post<any>('http://localhost:2637/api/authentication', this.body).pipe(
-      map(res => res));
+      map(res => res)
+      );
     auth$.subscribe(data => this.tokenSubject$.next(data), () => {});
     return auth$;
   }
