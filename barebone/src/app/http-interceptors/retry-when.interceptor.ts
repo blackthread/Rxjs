@@ -25,7 +25,7 @@ export class RetryWhenInterceptor implements HttpInterceptor {
             return this.authService.refreshToken$;
           }
 
-          //this.authService.logout();
+          this.authService.logout();
           return throwError(error);
         }),
         take(2)

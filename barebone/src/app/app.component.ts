@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { WeatherForecast} from './weatherforecast';
 import { KeyValuePipe } from '@angular/common';
+import {AuthService} from "./auth.service";
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,7 @@ export class AppComponent {
 
 
 
-  constructor(private http: HttpClient, private keyValue: KeyValuePipe) {
+  constructor(private http: HttpClient, private keyValue: KeyValuePipe, private authService: AuthService) {
 
   }
 
@@ -31,6 +32,7 @@ export class AppComponent {
   }
 
   handleClick(event: Event) {
+   // this.authService.authenticate();
     console.log('Click!', event);
     this.$tenant()
       .pipe(map(data => {
